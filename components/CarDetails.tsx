@@ -2,9 +2,15 @@
 import { CarDetailsProps } from '@/types'
 import { Dialog, Transition } from '@headlessui/react'
 import Image from 'next/image'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 
-const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
+const CarDetails = ({ isOpen, closeModal, car, imageUrls }: CarDetailsProps) => {
+    const [FullImage, setFullImage] = useState(false);
+    const [RegularImage, setRegularImahe] = useState(false);
+    const [smallImage, setSmallImage] = useState(false);
+    const [small_s3, setSmall_s3] = useState(false);
+
+
     return (
         <>
             <Transition appear show={isOpen} as={Fragment}>
@@ -47,19 +53,32 @@ const CarDetails = ({ isOpen, closeModal, car }: CarDetailsProps) => {
                                             className='object-contain ' />
                                     </button>
                                     <div className="flex-1 flex flex-col gap-3">
-                                        <div className="relative w-full h-40 bg-pattern bg-cover first-letter:bg-center rounded-lg">
-                                            <Image src="/hero.png" alt="car model" fill priority className="object-contain" />
-                                        </div>
+                                        {!FullImage && (
+                                            <div className="relative w-full h-40 bg-pattern bg-cover first-letter:bg-center rounded-lg">
+                                                <Image src={imageUrls.full || "/hero.png"} alt="car model" fill priority onError={() => setFullImage(true)} className="object-contain" />
+                                            </div>
+                                        )}
                                         <div className="flex gap-3">
-                                            <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
-                                                <Image src="/hero.png" alt="car model" fill priority className="object-contain" />
-                                            </div>
-                                            <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
-                                                <Image src="/hero.png" alt="car model" fill priority className="object-contain" />
-                                            </div>
-                                            <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
-                                                <Image src="/hero.png" alt="car model" fill priority className="object-contain" />
-                                            </div>
+                                            {!RegularImage && (
+                                                <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
+                                                    <Image src={imageUrls.regular || "/hero.png"} alt="car model" fill priority onError={() => setRegularImahe(true)} className="object-contain" />
+                                                </div>
+                                            )}
+                                            {
+                                                !smallImage && (
+                                                    <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
+                                                        <Image src={imageUrls.small || "/hero.png"} alt="car model" fill priority onError={() => setSmallImage(true)} className="object-contain" />
+                                                    </div>
+                                                )
+                                            }
+                                            {
+                                                !small_s3 && (
+
+                                                    <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
+                                                        <Image src={imageUrls.small_s3 || "/hero.png"} alt="car model" fill priority onError={() => setSmall_s3(true)} className="object-contain" />
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
                                     <div className="flex-1 flex flex-col gap-2">

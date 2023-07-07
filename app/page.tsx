@@ -2,8 +2,12 @@ import { CarCard, CustomFilter, Hero, SearchBar } from '@/components'
 import { fetchCars } from '@/utils'
 import Image from 'next/image'
 
-export default async function Home() {
-  const allcars = await fetchCars();
+export default async function Home({ searchParams }) {
+  const allcars = await fetchCars({
+    manufacturer: searchParams.manufacturer||'',
+    model: searchParams.model ||'',
+    limit:searchParams.limit || 10
+  });
   const isDataEmpty = !Array.isArray(allcars) || allcars.length < 1 || !allcars
   return (
     <main className="overflow-hidden">
@@ -15,10 +19,10 @@ export default async function Home() {
         </div>
         <div className="home__filters">
           <SearchBar />
-          <div className="home__filter-container">
+          {/* <div className="home__filter-container">
             <CustomFilter />
             <CustomFilter />
-          </div>
+          </div> */}
         </div>
         {
           !isDataEmpty ? (
