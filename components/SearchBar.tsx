@@ -5,12 +5,12 @@ import SearchManufacturer from "./SearchManufacturer"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { fetchCarType, fetchCars } from "@/utils"
+import { SearchBarProps } from "@/types"
 
-const SearchBar = ({ searchType }) => {
+const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, setSearchedModel }:SearchBarProps) => {
     const [manufacturer, setManufacturer] = useState('')
     const [model, setmodel] = useState('')
     const [carTypes, setCarTypes] = useState<String[]>([]);
-    const [searchedCar, setSearchedCar] = useState('');
 
     const router = useRouter()
 
@@ -24,22 +24,27 @@ const SearchBar = ({ searchType }) => {
     //     updateSearchParams(model.toLowerCase(), manufacturer.toLowerCase())
     // }
 
-    const updateSearchParams = (carType: string) => {
-        const searchParsms = new URLSearchParams(window.location.search);
-        if (carType) {
-            searchParsms.set('carType', carType)
-        } else {
-            searchParsms.delete('carType')
-        }
-        const newPathname = `${window.location.pathname}?${searchParsms.toString()}`
-        router.push(newPathname)
-    }
+    // const updateSearchParams = (carType: string) => {
+    //     const searchParsms = new URLSearchParams(window.location.search);
+    //     if (carType) {
+    //         searchParsms.set('carType', carType)
+    //     } else {
+    //         searchParsms.delete('carType')
+    //     }
+    //     const newPathname = `${window.location.pathname}?${searchParsms.toString()}`
+    //     router.push(newPathname)
+    // }
 
     const handleSelectChange = (event) => {
         const newValue = event.target.value;
         setSearchedCar(newValue);
-        updateSearchParams(newValue)
+        // updateSearchParams(newValue)
     };
+
+   const handleSelectedModel = (event) =>{
+        const newValue = event.target.value;
+        setSearchedModel(newValue);
+    }
 
 
     useEffect(() => {
@@ -109,8 +114,8 @@ const SearchBar = ({ searchType }) => {
                             <select
                                 id="underline_select"
                                 className="block py-2.5 px-3  w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                                value={searchedCar}
-                                onChange={handleSelectChange}
+                                value={searchedModel}
+                                onChange={handleSelectedModel}
                             >
                                 {
                                     Array.isArray(carTypes) && carTypes.length > 0 ? (

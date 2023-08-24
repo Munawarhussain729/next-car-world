@@ -2,9 +2,9 @@ import { CarProps, FilterProps } from "@/types";
 import dotenv from 'dotenv';
 dotenv.config();
 
-export async function fetchCars(filters: FilterProps): Promise<any[]> {
-    const { carType } = filters;
-    const url: string = 'https://car-data.p.rapidapi.com/cars?limit=20';
+export async function fetchCars(): Promise<any[]> {
+    // const { carType } = filters;
+    const url: string = 'https://car-data.p.rapidapi.com/cars?limit=30';
 
     const options: RequestInit = {
         method: 'GET',
@@ -19,12 +19,10 @@ export async function fetchCars(filters: FilterProps): Promise<any[]> {
         if (!response.ok) {
             throw new Error('Failed to fetch data');
         }
-        console.log("Car type is ", carType);
+       
         
-        const result: any[] = await response.json(); // Parse the JSON response
-        const filteredCars: any[] = result.filter((item) => item.type === carType);
-        
-        return filteredCars;
+        const result: any[] = await response.json(); // Parse the JSON response 
+        return result;
     } catch (error) {
         console.error(error);
         throw error; // Rethrow the error to handle it in the calling code
