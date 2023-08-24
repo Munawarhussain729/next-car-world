@@ -36,26 +36,6 @@ const CarCard = ({ car }: CarCardProps) => {
     });
     // const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-    useEffect(() => {
-        const fetchCarImage = async () => {
-            try {
-                const urls = await getCarImage(car);
-                setImageUrls({
-                    raw: urls.raw,
-                    full: urls.full,
-                    regular: urls.regular,
-                    small: urls.small,
-                    small_s3: urls.small_s3,
-                    thumb: urls.thumb
-                });
-
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchCarImage();
-    }, [car]);
     return (
         <>
             {!FullImage && (

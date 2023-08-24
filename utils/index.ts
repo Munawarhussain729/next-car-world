@@ -1,4 +1,6 @@
 import { CarProps, FilterProps } from "@/types";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export async function fetchCars(filters: FilterProps) {
     const headers = {
@@ -30,35 +32,63 @@ export const calculateCarRent = (city_mpg: number, year: number) => {
     return rentalRatePerDay.toFixed(0);
 };
 
-// export const generateCarImageUrl = (car: CarProps, angle?: string) => {
-//     const url = new URL('https://cdn.imagin.studio/getimage');
-//     const { make, year, model } = car;
-//     url.searchParams.append('customer', 'hrjavascript-mastery');
-//     url.searchParams.append('modelFamily', model.split(' ')[0]);
-//     url.searchParams.append('zoomType', 'fullscreen')
-//     url.searchParams.append('modelYear', `${year}`);
-//     url.searchParams.append('angle', `${angle}`)
-// }
-
 export async function getCarImage(car: CarProps) {
     const apiKey = process.env.NEXT_PUBLIC_SPLASH_API_KEY;
     const searchQuery = car.make + " " + car.model;
-    console.log("Search for Image is ", searchQuery);
-
-
-    try {
-        const response = await fetch(
-            `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${apiKey}`
-        );
-
-        if (!response.ok) {
-            throw new Error('Error fetching images from Unsplash API');
+    
+    const url: string = 'https://car-data.p.rapidapi.com/cars/types';
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+            'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
         }
-
-        const data = await response.json();
-        return data.results[0]?.urls || "https://images.unsplash.com/1/type-away.jpg"
+    };
+    
+    try {
+        const response: Response = await fetch(url, options);
+        const result: string = await response.text();
+        console.log(result);
     } catch (error) {
         console.error(error);
-        return [];
     }
+    
+
+    // try {
+    //     const response = await fetch(
+    //         `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${apiKey}`
+    //     );
+
+    //     if (!response.ok) {
+    //         throw new Error('Error fetching images from Unsplash API');
+    //     }
+
+    //     const data = await response.json();
+    //     return data.results[0]?.urls || "https://images.unsplash.com/1/type-away.jpg"
+    // } catch (error) {
+    //     console.error(error);
+    //     return [];
+    // }
+}
+
+
+export async function getCarType() {
+    const url: string = 'https://car-data.p.rapidapi.com/cars/types';
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+            'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
+        }
+    };
+    
+    try {
+        const response: Response = await fetch(url, options);
+        const result: string = await response.text();
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
+    
+
 }
