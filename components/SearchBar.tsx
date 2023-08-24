@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import SearchManufacturer from "./SearchManufacturer"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { fetchCarType } from "@/utils"
+import { fetchCarType, fetchCars } from "@/utils"
 
 const SearchBar = ({ searchType }) => {
     const [manufacturer, setManufacturer] = useState('')
@@ -43,12 +43,23 @@ const SearchBar = ({ searchType }) => {
 
 
     useEffect(() => {
-        const getAllTypes = async () => {
-            const response: String[] = await fetchCarType()
-            setCarTypes(response)
+        const storedData = localStorage.getItem('carTypes');
+    
+        if (storedData === undefined) {
+            const parsedData = JSON.parse(storedData);
+            setCarTypes(parsedData);
+        } else {
+            const getAllTypes = async () => {
+                const response: String[] = await fetchCarType();
+                setCarTypes(response);
+                localStorage.setItem('carTypes', JSON.stringify(response));
+            };
+    
+            getAllTypes();
         }
-        getAllTypes()
-    }, [])
+    }, []);
+    
+
 
     return (
         <div >
