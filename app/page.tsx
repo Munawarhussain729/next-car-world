@@ -1,13 +1,12 @@
 import { CarCard, CustomFilter, Hero, SearchBar } from '@/components'
 import { fetchCars } from '@/utils'
 import Image from 'next/image'
+import { useState } from 'react';
 
 export default async function Home({ searchParams }) {
   const allcars = await fetchCars({
-    manufacturer: searchParams.manufacturer||'',
-    model: searchParams.model ||'',
-    limit:searchParams.limit || 10
-  });
+    carType: searchParams.carType ||''
+  });  
   const isDataEmpty = !Array.isArray(allcars) || allcars.length < 1 || !allcars
   return (
     <main className="overflow-hidden">
@@ -17,17 +16,14 @@ export default async function Home({ searchParams }) {
           <h1 className='text-4xl font-extrabold'> Car Catalogue</h1>
           <p>Explore the cars you migh like</p>
         </div>
-        <div className="home__filters">
-          <SearchBar />
-          {/* <div className="home__filter-container">
-            <CustomFilter />
-            <CustomFilter />
-          </div> */}
+        <div className='mt-10'>
+          <SearchBar searchType ={true}/>
+          <SearchBar searchType ={false} />
         </div>
         {
           !isDataEmpty ? (
             <section>
-              <div className="home__Cars-wrapper">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
                 {allcars?.map((car) => (
                   <CarCard car={car} />
                 ))}

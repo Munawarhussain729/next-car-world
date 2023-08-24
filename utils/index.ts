@@ -2,18 +2,29 @@ import { CarProps, FilterProps } from "@/types";
 import dotenv from 'dotenv';
 dotenv.config();
 
-export async function fetchCars(filters: FilterProps) {
-    const headers = {
-        'X-RapidAPI-Key': 'use your Rapi Api key ',
-        'X-RapidAPI-Host': 'cars-by-api-ninjas.p.rapidapi.com'
-    }
-    const { manufacturer, limit, model } = filters;
-    const response = await fetch(`https://cars-by-api-ninjas.p.rapidapi.com/v1/cars?make${manufacturer}&model=${model}&limit=${limit}`, {
-        headers: headers,
-    });
+export async function fetchCars(filters: FilterProps): Promise<any[]> {
+    const { carType } = filters;
+    const url: string = 'https://car-data.p.rapidapi.com/cars?limit=10&page=0';
 
-    const result = await response.json()
-    return result
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+            'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
+        }
+    };
+
+    try {
+        const response: Response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        const result: any[] = await response.json(); // Parse the JSON response
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error; // Rethrow the error to handle it in the calling code
+    }
 }
 
 
@@ -35,7 +46,7 @@ export const calculateCarRent = (city_mpg: number, year: number) => {
 export async function getCarImage(car: CarProps) {
     const apiKey = process.env.NEXT_PUBLIC_SPLASH_API_KEY;
     const searchQuery = car.make + " " + car.model;
-    
+
     const url: string = 'https://car-data.p.rapidapi.com/cars/types';
     const options: RequestInit = {
         method: 'GET',
@@ -44,15 +55,14 @@ export async function getCarImage(car: CarProps) {
             'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
         }
     };
-    
+
     try {
         const response: Response = await fetch(url, options);
         const result: string = await response.text();
-        console.log(result);
     } catch (error) {
         console.error(error);
     }
-    
+
 
     // try {
     //     const response = await fetch(
@@ -72,7 +82,7 @@ export async function getCarImage(car: CarProps) {
 }
 
 
-export async function getCarType() {
+export async function fetchCarType(): Promise<string[]> {
     const url: string = 'https://car-data.p.rapidapi.com/cars/types';
     const options: RequestInit = {
         method: 'GET',
@@ -81,14 +91,17 @@ export async function getCarType() {
             'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
         }
     };
-    
+
     try {
         const response: Response = await fetch(url, options);
-        const result: string = await response.text();
-        console.log(result);
+        if (response.ok) {
+            const data: string[] = await response.json(); // Assuming the API returns a JSON array of strings
+            return data;
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+
     } catch (error) {
         console.error(error);
     }
-    
-
 }

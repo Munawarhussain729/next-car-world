@@ -46,11 +46,15 @@ export interface CarDetailsProps {
     }
 }
 
-export interface FilterProps {
-    manufacturer: string;
-    model: string;
-    limit: number;
+// export interface FilterProps {
+//     manufacturer: string;
+//     model: string;
+//     limit: number;
 
+// }
+export interface FilterProps {
+    carType: string;
+    
 }
 
 

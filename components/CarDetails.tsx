@@ -53,12 +53,12 @@ const CarDetails = ({ isOpen, closeModal, car, imageUrls }: CarDetailsProps) => 
                                             className='object-contain ' />
                                     </button>
                                     <div className="flex-1 flex flex-col gap-3">
-                                        {!FullImage && (
+                                        {/* {!FullImage && (
                                             <div className="relative w-full h-40 bg-pattern bg-cover first-letter:bg-center rounded-lg">
                                                 <Image src={imageUrls.full || "/hero.png"} alt="car model" fill priority onError={() => setFullImage(true)} className="object-contain" />
                                             </div>
-                                        )}
-                                        <div className="flex gap-3">
+                                        )} */}
+                                        {/* <div className="flex gap-3">
                                             {!RegularImage && (
                                                 <div className="flex-1 relative w-full h-24  bg-primary-blue-100 rounded-lg">
                                                     <Image src={imageUrls.regular || "/hero.png"} alt="car model" fill priority onError={() => setRegularImahe(true)} className="object-contain" />
@@ -79,7 +79,7 @@ const CarDetails = ({ isOpen, closeModal, car, imageUrls }: CarDetailsProps) => 
                                                     </div>
                                                 )
                                             }
-                                        </div>
+                                        </div> */}
                                     </div>
                                     <div className="flex-1 flex flex-col gap-2">
                                         <h2 className='font-semibold text-xl capitalize'>{car.make} {car.model}</h2>
