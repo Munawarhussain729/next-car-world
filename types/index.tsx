@@ -56,12 +56,21 @@ export interface FilterProps {
     carType: string;   
 }
 
+export interface CarType {
+    id: number;
+    year: number;
+    make: string;
+    model: string;
+    type: string;
+  }
+
 export interface SearchBarProps {
-    searchType: boolean; // Example prop
+    searchType: boolean; 
     searchedCar: string;
     setSearchedCar: (value: string) => void;
     searchedModel: string;
     setSearchedModel: (value: string) => void;
+    filteredCars:CarType[]
   }
 
   

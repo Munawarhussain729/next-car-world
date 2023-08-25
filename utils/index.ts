@@ -19,8 +19,8 @@ export async function fetchCars(): Promise<any[]> {
         if (!response.ok) {
             throw new Error('Failed to fetch data');
         }
-       
-        
+
+
         const result: any[] = await response.json(); // Parse the JSON response 
         return result;
     } catch (error) {
@@ -45,43 +45,43 @@ export const calculateCarRent = (city_mpg: number, year: number) => {
     return rentalRatePerDay.toFixed(0);
 };
 
-export async function getCarImage(car: CarProps) {
-    const apiKey = process.env.NEXT_PUBLIC_SPLASH_API_KEY;
-    const searchQuery = car.make + " " + car.model;
+// export async function getCarImage(car: CarProps) {
+//     const apiKey = process.env.NEXT_PUBLIC_SPLASH_API_KEY;
+//     const searchQuery = car.make + " " + car.model;
 
-    const url: string = 'https://car-data.p.rapidapi.com/cars/types';
-    const options: RequestInit = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
-            'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
-        }
-    };
+//     const url: string = 'https://car-data.p.rapidapi.com/cars/types';
+//     const options: RequestInit = {
+//         method: 'GET',
+//         headers: {
+//             'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+//             'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_HOST_KEY
+//         }
+//     };
 
-    try {
-        const response: Response = await fetch(url, options);
-        const result: string = await response.text();
-    } catch (error) {
-        console.error(error);
-    }
+//     try {
+//         const response: Response = await fetch(url, options);
+//         const result: string = await response.text();
+//     } catch (error) {
+//         console.error(error);
+//     }
 
 
-    // try {
-    //     const response = await fetch(
-    //         `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${apiKey}`
-    //     );
+//     // try {
+//     //     const response = await fetch(
+//     //         `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${apiKey}`
+//     //     );
 
-    //     if (!response.ok) {
-    //         throw new Error('Error fetching images from Unsplash API');
-    //     }
+//     //     if (!response.ok) {
+//     //         throw new Error('Error fetching images from Unsplash API');
+//     //     }
 
-    //     const data = await response.json();
-    //     return data.results[0]?.urls || "https://images.unsplash.com/1/type-away.jpg"
-    // } catch (error) {
-    //     console.error(error);
-    //     return [];
-    // }
-}
+//     //     const data = await response.json();
+//     //     return data.results[0]?.urls || "https://images.unsplash.com/1/type-away.jpg"
+//     // } catch (error) {
+//     //     console.error(error);
+//     //     return [];
+//     // }
+// }
 
 
 export async function fetchCarType(): Promise<string[]> {
@@ -107,3 +107,41 @@ export async function fetchCarType(): Promise<string[]> {
         console.error(error);
     }
 }
+
+
+export async function fetchCarDetails() {
+    const url = 'https://cars-by-api-ninjas.p.rapidapi.com/v1/cars';
+    const queryParams = {
+        model: 'Convertible',
+        make: 'MINI',
+        year: '2006'
+    };
+
+    // Construct the URL with query parameters
+    const queryString = new URLSearchParams(queryParams).toString();
+    const apiUrl = `${url}?${queryString}`;
+
+    const headers = {
+        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+        'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_BY_NINJA_HOST_KEY
+    };
+
+    const options = {
+        method: 'GET',
+        headers: headers
+    };
+
+    try {
+        const response = await fetch(apiUrl, options);
+        if (!response.ok) {
+            throw new Error(`API request failed with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

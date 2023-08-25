@@ -6,7 +6,6 @@ import Image from "next/image"
 import CustomButton from "./CustomButton"
 import { useEffect, useState } from "react"
 import CarDetails from "./CarDetails"
-
 interface CarCardProps {
     car: CarProps
 }
@@ -37,6 +36,9 @@ const CarCard = ({ car }: CarCardProps) => {
     // });
     // const [imageUrls, setImageUrls] = useState<string[]>([]);
 
+    const handleViewMore = ()=>{
+        setIsOpen(false)
+    }
     return (
         <>
             { 
@@ -99,7 +101,7 @@ const CarCard = ({ car }: CarCardProps) => {
                                 handleClick={() => setIsOpen(true)} />
                         </div>
                     </div>
-                    <CarDetails isOpen={isOpen} closeModal={() => setIsOpen(false)} car={car}  />
+                    <CarDetails isOpen={isOpen} closeModal={handleViewMore } car={car}  />
                 </div>
             }
         </>

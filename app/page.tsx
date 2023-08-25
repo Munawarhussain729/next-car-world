@@ -3,41 +3,51 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { fetchCars } from '@/utils';
 import { CarCard, Hero, SearchBar } from '@/components';
+import { CarType } from '@/types';
 
-interface CarType {
-  id: number;
-  year: number;
-  make: string;
-  model: string;
-  type: string;
-}
+
 
 interface HomeProps {
   // Define any props you might receive here
 }
 
 export default function Home({ }: HomeProps) {
-  const [searchedCar, setSearchedCar] = useState<string>('');
+  const [searchedCar, setSearchedCar] = useState<string>('SUV');
   const [searchedModel, setSearchedModel] = useState<string>('');
   const [filteredCars, setFilteredCars] = useState<CarType[]>([]);
 
-  const fetchAllCars = async () => {
-    try {
-      const allCars: CarType[] = await fetchCars();
-      return allCars;
-    } catch (error) {
-      console.error('Error fetching cars:', error);
-      return [];
-    }
-  };
 
   useEffect(() => {
-    const updateFilteredCars = async () => {
-      const allCars = await fetchAllCars();
+    const fetchAllCars = async () => {
+      try {
+        const allcars = localStorage.getItem('allCars')
+        if (!!allcars) {
+          return JSON.parse(allcars)
+        }
+        else {
+          const allCars: CarType[] = await fetchCars();
+          localStorage.setItem('allCars', JSON.stringify(allCars))
+          return allCars;
+        }
+      } catch (error) {
+        console.error('Error fetching cars:', error);
+        return [];
+      }
+    };
+    fetchAllCars();
+  }, [])
 
-      if (allCars.length > 0) {
-        const updatedCars = allCars.filter((car) => car.type === searchedCar);
-        setFilteredCars(updatedCars);
+  useEffect(() => {
+    const updateFilteredCars = () => {
+      const allcars = localStorage.getItem('allCars')
+      if (allcars) {
+        const allCars: CarType[]  = JSON.parse(allcars)
+        console.log("All cares ", allCars);
+        
+        if (allCars.length > 0) {
+          const updatedCars = allCars.filter((car) => car.type === searchedCar);
+          setFilteredCars(updatedCars);
+        }
       }
     };
 
@@ -59,11 +69,17 @@ export default function Home({ }: HomeProps) {
             searchType={true}
             searchedCar={searchedCar}
             setSearchedCar={setSearchedCar}
+            searchedModel={searchedModel}
+            setSearchedModel={setSearchedModel}
+            filteredCars={filteredCars}
           />
           <SearchBar
             searchType={false}
             searchedModel={searchedModel}
             setSearchedModel={setSearchedModel}
+            searchedCar={searchedCar}
+            setSearchedCar={setSearchedCar}
+            filteredCars={filteredCars}
           />
         </div>
         {!isDataEmpty ? (

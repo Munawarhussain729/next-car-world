@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { fetchCarType, fetchCars } from "@/utils"
 import { SearchBarProps } from "@/types"
 
-const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, setSearchedModel }:SearchBarProps) => {
+const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, setSearchedModel, filteredCars }: SearchBarProps) => {
     const [manufacturer, setManufacturer] = useState('')
     const [model, setmodel] = useState('')
     const [carTypes, setCarTypes] = useState<String[]>([]);
@@ -41,7 +41,7 @@ const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, set
         // updateSearchParams(newValue)
     };
 
-   const handleSelectedModel = (event) =>{
+    const handleSelectedModel = (event) => {
         const newValue = event.target.value;
         setSearchedModel(newValue);
     }
@@ -49,21 +49,24 @@ const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, set
 
     useEffect(() => {
         const storedData = localStorage.getItem('carTypes');
-    
-        if (storedData === undefined) {
+        console.log("Store data is ", typeof (storedData));
+
+        if (!!storedData) {
             const parsedData = JSON.parse(storedData);
             setCarTypes(parsedData);
         } else {
             const getAllTypes = async () => {
                 const response: String[] = await fetchCarType();
-                setCarTypes(response);
-                localStorage.setItem('carTypes', JSON.stringify(response));
+                if (response) {
+                    setCarTypes(response);
+                    localStorage.setItem('carTypes', JSON.stringify(response));
+                }
             };
-    
+
             getAllTypes();
         }
     }, []);
-    
+
 
 
     return (
@@ -118,12 +121,12 @@ const SearchBar = ({ searchType, searchedCar, setSearchedCar, searchedModel, set
                                 onChange={handleSelectedModel}
                             >
                                 {
-                                    Array.isArray(carTypes) && carTypes.length > 0 ? (
-                                        carTypes?.map((item) => (
-                                            <option value={item} className="my-2">{item}</option>
+                                    Array.isArray(filteredCars) && filteredCars.length > 0 ? (
+                                        filteredCars?.map((item) => (
+                                            <option value={item.model} className="my-2">{item.model}</option>
 
                                         ))) : (
-                                        <option value="">No car types available</option>
+                                        <option value="">No car Model  available</option>
                                     )
                                 }
                             </select>
