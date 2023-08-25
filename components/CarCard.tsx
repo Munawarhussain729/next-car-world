@@ -1,7 +1,7 @@
 "use client"
 
 import { CarProps } from "@/types"
-import { calculateCarRent, getCarImage } from "@/utils"
+import { calculateCarRent, fetchCarDetails, getCarImage } from "@/utils"
 import Image from "next/image"
 import CustomButton from "./CustomButton"
 import { useEffect, useState } from "react"
@@ -17,12 +17,13 @@ interface CarImagesUrl {
     small: string,
     small_s3: string,
     thumb: string
-
 }
+
 
 const CarCard = ({ car }: CarCardProps) => {
     // const { city_mpg, year, make, model, transmission, drive } = car;
-    const {year,make,model, type} = car
+    const { year, make, model, type } = car
+    const [cartDetails, setCarDetail] = useState<CarProps|null>(null)
     // const CarRent = calculateCarRent(city_mpg, year)
     const [isOpen, setIsOpen] = useState(false)
     // const [FullImage, setFullImage] = useState(false);
@@ -36,12 +37,26 @@ const CarCard = ({ car }: CarCardProps) => {
     // });
     // const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-    const handleViewMore = ()=>{
-        setIsOpen(false)
-    }
+    const handleViewMore = async () => {
+        try {
+            const data: any = await fetchCarDetails(model, make, year);
+            if (data) {
+               if(data.length > 0){
+                setCarDetail(data[0])
+               }else{
+                setCarDetail(null)
+               }
+            }
+        } catch (error) {
+            console.error("Error fetching car details:", error);
+        }
+
+        setIsOpen(true);
+    };
+
     return (
         <>
-            { 
+            {
                 <div className="car-card w-full group m-5">
                     <div className="car-card__content">
                         <h2 className="car-card__content-title">{make} {model}</h2>
@@ -98,10 +113,10 @@ const CarCard = ({ car }: CarCardProps) => {
                                 containerStyles="w-full py-[16px] rounded-full bg-primary-blue"
                                 textStyles="text-white text-[14px] leading-[17px] font-bold "
                                 rightIcon="/right-arrow.svg"
-                                handleClick={() => setIsOpen(true)} />
+                                handleClick={handleViewMore} />
                         </div>
                     </div>
-                    <CarDetails isOpen={isOpen} closeModal={handleViewMore } car={car}  />
+                    <CarDetails isOpen={isOpen} closeModal={()=>setIsOpen(false)} car={cartDetails} />
                 </div>
             }
         </>

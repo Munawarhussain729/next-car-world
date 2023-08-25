@@ -1,4 +1,4 @@
-import { CarProps, FilterProps } from "@/types";
+import { CarProps, FetchCarDetailProps, FilterProps } from "@/types";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -109,26 +109,23 @@ export async function fetchCarType(): Promise<string[]> {
 }
 
 
-export async function fetchCarDetails() {
+export async function fetchCarDetails(carModel:string, carMake:string, carYear:number):Promise<FetchCarDetailProps> {
     const url = 'https://cars-by-api-ninjas.p.rapidapi.com/v1/cars';
     const queryParams = {
-        model: 'Convertible',
-        make: 'MINI',
-        year: '2006'
+        model: carModel,
+        make: carMake,
+        year: carYear
     };
 
     // Construct the URL with query parameters
     const queryString = new URLSearchParams(queryParams).toString();
     const apiUrl = `${url}?${queryString}`;
-
-    const headers = {
-        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
-        'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_BY_NINJA_HOST_KEY
-    };
-
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
-        headers: headers
+        headers: {
+            'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_CAR_DATA_API_KEY,
+            'X-RapidAPI-Host': process.env.NEXT_PUBLIC_RAPID_CAR_BY_NINJA_HOST_KEY
+        }
     };
 
     try {
@@ -138,7 +135,6 @@ export async function fetchCarDetails() {
         }
 
         const data = await response.json();
-        console.log(data);
         return data;
     } catch (error) {
         console.error(error);

@@ -53,7 +53,7 @@ export interface CarDetailsProps {
 
 // }
 export interface FilterProps {
-    carType: string;   
+    carType: string;
 }
 
 export interface CarType {
@@ -62,18 +62,23 @@ export interface CarType {
     make: string;
     model: string;
     type: string;
-  }
+}
 
 export interface SearchBarProps {
-    searchType: boolean; 
+    searchType: boolean;
     searchedCar: string;
     setSearchedCar: (value: string) => void;
     searchedModel: string;
     setSearchedModel: (value: string) => void;
-    filteredCars:CarType[]
-  }
+    filteredCars: CarType[]
+}
 
-  
+export interface FetchCarDetailProps {
+    carModel: string;
+    carMake: string;
+    carYear: number
+}
+
 // env.d.ts
 declare namespace NodeJS {
     interface ProcessEnv {
