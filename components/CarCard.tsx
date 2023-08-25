@@ -21,27 +21,16 @@ interface CarImagesUrl {
 
 
 const CarCard = ({ car }: CarCardProps) => {
-    // const { city_mpg, year, make, model, transmission, drive } = car;
     const { year, make, model, type } = car
     const [cartDetails, setCarDetail] = useState<CarProps|null>(null)
-    // const CarRent = calculateCarRent(city_mpg, year)
     const [isOpen, setIsOpen] = useState(false)
-    // const [FullImage, setFullImage] = useState(false);
-    // const [imageUrls, setImageUrls] = useState<CarImagesUrl>({
-    //     raw: '',
-    //     full: '',
-    //     regular: '',
-    //     small: '',
-    //     small_s3: '',
-    //     thumb: ''
-    // });
-    // const [imageUrls, setImageUrls] = useState<string[]>([]);
-
+    const [carRent , setCarRent ] = useState<string>('')
     const handleViewMore = async () => {
         try {
             const data: any = await fetchCarDetails(model, make, year);
             if (data) {
                if(data.length > 0){
+                setCarRent(calculateCarRent(data[0]?.city_mpg, data[0]?.year))
                 setCarDetail(data[0])
                }else{
                 setCarDetail(null)
@@ -61,49 +50,17 @@ const CarCard = ({ car }: CarCardProps) => {
                     <div className="car-card__content">
                         <h2 className="car-card__content-title">{make} {model}</h2>
                     </div>
-                    {/* <p className="flex mt-6 text-[32px] font-extrabold">
-                        <span className="self-start text-[14px] font-semibold">$ </span>
-                        <span className="self-start text-[14px] font-semibold">/day </span>
-                    </p> */}
-
-                    {/* {imageUrls ? (
-                        <div className="relative w-full h-40 my-3 object-cover">
-                            <Image
-                                src={imageUrls.full}
-                                alt="car model"
-                                layout="fill"
-                                objectFit="contain"
-                                priority
-                                onError={() => setFullImage(true)}
-                            />
-                        </div>
-                    ) :
-                     (
-                        <div className="relative w-full h-40 my-3 object-contain">
-                            <Image
-                                src="/hero.png" // Provide a fallback image source
-                                alt="car model"
-                                layout="fill"
-                                objectFit="contain"
-                                priority
-                                onError={() => setFullImage(true)}
-                            />
-                        </div>
-                    )} */}
                     <div className="relative flex w-full mt-10">
                         <div className="flex group-hover:invisible w-full  flex-wrap justify-between text-gray ">
                             <div className="flex justify-center items-center  gap-2">
-                                {/* <Image src="/steering-wheel.svg" width={20} height={20} alt="steering wheel" /> */}
                                 <h1 className="font-bold text-[17px]">Year:</h1>
                                 <p className="text-[14px]">{year}</p>
                             </div>
                             <div className="flex justify-center items-center gap-2">
-                                {/* <Image src="/steering-wheel.svg" width={20} height={20} alt="steering wheel" /> */}
                                 <h1 className="font-bold text-[17px]">Model:</h1>
                                 <p className="text-[14px]">{model} </p>
                             </div>
                             <div className="flex justify-center items-center gap-2">
-                                {/* <Image src="/steering-wheel.svg" width={20} height={20} alt="steering wheel" /> */}
                                 <h1 className="font-bold text-[17px]">Vehicle Type:</h1>
                                 <p className="text-[14px]"> {type}</p>
                             </div>
@@ -116,7 +73,7 @@ const CarCard = ({ car }: CarCardProps) => {
                                 handleClick={handleViewMore} />
                         </div>
                     </div>
-                    <CarDetails isOpen={isOpen} closeModal={()=>setIsOpen(false)} car={cartDetails} />
+                    <CarDetails isOpen={isOpen} closeModal={()=>setIsOpen(false)} car={cartDetails} carRent = {carRent} />
                 </div>
             }
         </>
